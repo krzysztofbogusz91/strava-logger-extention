@@ -1,9 +1,12 @@
-const { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema } = require('graphql');
+const { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, Query, GraphQLOutputType } = require('graphql');
 const { token } = require('./keys')
 const axios = require('axios');
 const access_token = token;
-console.log(token);
+
 axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}` 
+
+// axios.get('https://www.strava.com/api/v3/athlete')
+//             .then(res => console.log(res.data));
 
 const AthleteData = new GraphQLObjectType({
   name: 'BasicAthleteData',
@@ -25,18 +28,7 @@ const RootQuery = new GraphQLObjectType({
         return axios.get('https://www.strava.com/api/v3/athlete')
           .then(res => res.data);
       }
-    },
-    athlete: {
-      type: AthleteData,
-      args: {
-        id: { type: GraphQLInt },
-        firstname: {type: GraphQLString},
-      }, 
-      resolve(parent, args) {
-          return axios.get('https://www.strava.com/api/v3/athlete')
-            .then(res => res.data);
-        }
-      },
+    }
   }),
 })
 
