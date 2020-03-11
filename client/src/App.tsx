@@ -1,24 +1,20 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const logToStrava = function() {
+    console.log('log to strava');
+
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header>
+          Strava Logger App
       </header>
+      <div className="button-container">
+        <button onClick={logToStrava}>Log with Strava</button>
+        <a href="http://www.strava.com/oauth/authorize?client_id=43111&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=read">click</a>
+      </div>
     </div>
   );
 }
