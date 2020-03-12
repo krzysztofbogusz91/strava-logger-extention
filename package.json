@@ -18,9 +18,12 @@
   },
   "homepage": "https://github.com/krzysztofbogusz91/strava-logger-extention#readme",
   "dependencies": {
+    "@types/react-router-dom": "^5.1.3",
     "axios": "^0.19.2",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
-    "graphql": "^14.6.0"
+    "graphql": "^14.6.0",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2"
   }
 }

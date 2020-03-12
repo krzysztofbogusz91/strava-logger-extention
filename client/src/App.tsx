@@ -1,20 +1,19 @@
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
+import LogInPage from './components/LogInPage';
+import Dashboard from './components/Dashboard';
+import ExchangePage from './components/ExchangePage';
 
 function App() {
-  const logToStrava = function() {
-    console.log('log to strava');
 
-  }
   return (
     <div className="App">
-      <header>
-          Strava Logger App
-      </header>
-      <div className="button-container">
-        <button onClick={logToStrava}>Log with Strava</button>
-        <a href="http://www.strava.com/oauth/authorize?client_id=43111&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=read">click</a>
-      </div>
+      <Switch>
+        <Route path="/login" component={LogInPage} exact />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/exchange_token" component={ExchangePage} />
+      </Switch>
     </div>
   );
 }
