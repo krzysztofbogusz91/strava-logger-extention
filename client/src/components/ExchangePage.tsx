@@ -1,63 +1,43 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types';
-
-import { saveToken } from '../actions';
+import React, { useEffect } from "react";
 import { connect } from 'react-redux';
-type Props = {
-  saveToken: any;
-}
-type State = {
-  token: string;
-}
-class ExchangePage extends Component <Props, State> {
+import { saveToken } from '../actions';
+import { setAuthInLS } from '../helpers/local-storage.helper';
 
-  componentDidMount() {
+export const ExchangePage = ( props: any) => {
+
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    const url = new URL("https://www.strava.com/oauth/token");
-    const params: any = { client_id: '43111', client_secret:'', code, grant_type: 'authorization_code'}
+    const url = "http://localhost:5000/auth" + `?code=${code}`;
    
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    
     fetch('' + url, {
-      method: 'POST', 
+      method: 'GET', 
       mode: 'cors',
-    }).then(resp => {
-      return (resp.json())
-    }).then ((resps: any) => {
-      console.log(resps);
+    }).then(resp => resp.json())
+      .then ((resps: any) => {
       const access_token = resps.access_token;
-      // to do move to graph ql
-      // to do save token to store
-      // to do redirect to dashbord than call qrapql
-      this.saveToken(access_token);
-      fetch('https://www.strava.com/api/v3/activities', {
-        headers: new Headers({ 'Authorization': 'Bearer ' + access_token })
-      }).then(resp2 =>{
-        return resp2.json();
-      }).then(resp3 => console.log(resp3))
+      const refresh_token = resps.refresh_token;
+      const athlete = resps.user;
+      if(!!access_token && !!athlete){
+        props.saveToken(access_token, refresh_token, athlete);
+        setAuthInLS({access_token, refresh_token, athlete});
+        props.history.push('/dashboard')
+      }
+    }).catch(err => {
+      console.log('error exchange', err);
+      
     })
-  }
+  }, []);
 
-  render() {
     return (
       <div className="ExchangePage">
         Loadning... .. .
       </div>
     )
-  }
 }
 
-ExchangePage.propTypes = {
-  saveToken: PropTypes.func,
-};
-
-ExchangePage.defaultProps = {
-  getHeroes: null,
-};
-
 const mapDispatchToProps = (dispatch: any) => ({
-  saveToken: (token: any) => dispatch(saveToken(token)),
+  saveToken: (token:any, refresh:any, user:any) => dispatch(saveToken(token, refresh, user)),
 });
 
 export default connect(null, mapDispatchToProps)(ExchangePage);

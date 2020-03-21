@@ -4,8 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "server": "nodemon server.js"
+    "start": "cd server && node server.js",
+    "server": "cd server && nodemon server.js",
+    "dev": "cd client && npm run start"
   },
   "repository": {
     "type": "git",
@@ -18,16 +19,14 @@
   },
   "homepage": "https://github.com/krzysztofbogusz91/strava-logger-extention#readme",
   "dependencies": {
+    "@types/react": "^16.9.23",
     "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.3",
     "axios": "^0.19.2",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^14.6.0",
-    "react-redux": "^7.2.0",
-    "react-router": "^5.1.2",
-    "react-router-dom": "^5.1.2",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "node-fetch": "^2.6.0"
   }
 }

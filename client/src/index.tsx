@@ -12,6 +12,7 @@ import thunk from 'redux-thunk';
 import AppStore from './reducers/reducers';
 
 const store = createStore(AppStore, applyMiddleware(thunk));
+console.log(store.getState());
 
 ReactDOM.render( 
   <Provider store={store}>
