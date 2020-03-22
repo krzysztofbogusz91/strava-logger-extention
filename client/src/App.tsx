@@ -2,8 +2,9 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import LogInPage from './components/LogInPage';
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/Dashboard/Dashboard';
 import ExchangePage from './components/ExchangePage';
+
 
 function App() {
 
