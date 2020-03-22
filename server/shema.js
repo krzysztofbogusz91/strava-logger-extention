@@ -1,31 +1,53 @@
-const { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, Query, GraphQLOutputType } = require('graphql');
-const { token } = require('./keys')
+const { GraphQLObjectType, GraphQLInt, GraphQLFloat,  GraphQLString, GraphQLSchema, GraphQLList, Query, GraphQLOutputType } = require('graphql');
 const axios = require('axios');
-const access_token = token;
-
-axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}` 
-
-// axios.get('https://www.strava.com/api/v3/athlete')
-//             .then(res => console.log(res.data));
 
 const AthleteData = new GraphQLObjectType({
   name: 'BasicAthleteData',
   fields: () => ({
-    id: {type: GraphQLInt},
+    id: {type: GraphQLFloat},
     lastname: {type: GraphQLString},
     firstname: {type: GraphQLString},
     city: {type: GraphQLString}
   })
 })
 
+const ActivityData = new GraphQLObjectType({
+  name: 'BasicActivityData',
+  fields: () => ({
+    id: {type: GraphQLFloat},
+    name: {type: GraphQLString},
+    start_date: {type: GraphQLString},
+    location_country: {type: GraphQLString},
+    type: {type: GraphQLString},
+  })
+})
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: () => ({
     athleteData: {
       type: AthleteData,
-      resolve(parent, agrs) {
+      args: {
+        token: {
+          type: GraphQLString
+        }
+      },
+      resolve(parent, args) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${args.token}` 
         return axios.get('https://www.strava.com/api/v3/athlete')
+          .then(res => res.data);
+      }
+    },
+    activities: {
+      type: new GraphQLList(ActivityData),
+      args: {
+        token: {
+          type: GraphQLString
+        }
+      },
+      resolve(parent, args) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${args.token}` 
+        return axios.get('https://www.strava.com/api/v3/activities')
           .then(res => res.data);
       }
     }
