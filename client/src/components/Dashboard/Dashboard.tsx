@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
 import { getAuthFromLS } from '../../helpers/local-storage.helper';
 import './Dashboard.scss';
 
@@ -17,34 +19,31 @@ interface Activity {
   type: string;
 }
 
-function Dashboard(props: any) {
-  const [ user, setUser ] = useState({firstname: '', lastname: '', profile: ''});
-  const [ activities, setActivities ] = useState([]);
-  useEffect(() => {
-
-    const { athlete, token} = getAuthFromLS()
-    const authUser = !props.athlete ? athlete : props.athlete;
-    const access_token = !props.token ? token : props.token;
-    console.log(authUser);
-    
-    setUser(authUser);
-
-    fetch('https://www.strava.com/api/v3/activities', {
-    headers: new Headers({ 'Authorization': 'Bearer ' + access_token })
-  }).then(re =>{
-    return re.json();
-  }).then(res => {
-    if(!!res.errors) {
-      console.log('got err', res);
-      setActivities([])
-      return null;
-    } else {
-      setActivities(res)
-      console.log('got res', res)
+const ACTIVITIES = gql`
+  query Activities($token: String) {
+    activities (token: $token){
+      name,
+      start_date,
+      location_country,
+      type,
+      id
     }
-  })
-  .catch(err => console.log('GOT ERR: ', err)
-  )
+  }
+`;
+
+function Dashboard(props: any) {
+  const { athlete, access_token} = getAuthFromLS()
+  const [ user, setUser ] = useState({firstname: '', lastname: '', profile: ''});
+  const authUser = !props.athlete ? athlete : props.athlete;
+  const token = !props.token ? access_token : props.token;
+  
+  const { loading, error, data } = useQuery(ACTIVITIES, {
+    variables: { token }
+  });
+  
+
+  useEffect(() => {
+    setUser(authUser);
   }, []);
 
   const displayActivities = (activities: Activity[]) => {
@@ -69,7 +68,7 @@ function Dashboard(props: any) {
       </div>
       <div className="dashboard-content">
         <ul className="dashboard-content-list">
-        {activities.length > 0 ? displayActivities(activities) : 'Loading activities...'}
+        {!!data && data.activities.length > 0 ? displayActivities(data.activities) : 'Loading activities...'}
         </ul>
       </div>
     </div>
@@ -77,8 +76,6 @@ function Dashboard(props: any) {
 }
 
 function mapStateToProps(state: any) {
-  console.log('state', state);
-  
   const { token , athlete } = state
   return { token, athlete }
 }

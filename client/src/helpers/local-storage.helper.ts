@@ -6,6 +6,7 @@ interface AuthStravaModel {
 
 export const getAuthFromLS = () => {
   const auth = localStorage.getItem('auth');
+  
   return !!auth ? JSON.parse(auth) : false;
 }
 

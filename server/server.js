@@ -8,11 +8,6 @@ const keys = require('./keys')
 const app = express();
 app.use(cors());
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  graphiql: true
-}))
-
 app.get('/auth', function (req, res) {
   const code = req.query.code
   const secret = keys.sec;
@@ -27,8 +22,6 @@ app.get('/auth', function (req, res) {
   }).then(resp => {
     return (resp.json())
   }).then ( resps => {
-    console.log(resps);
-    
     const user = resps.athlete
     const access_token = resps.access_token;
     const refresh_token = resps.refresh_token
@@ -39,6 +32,10 @@ app.get('/auth', function (req, res) {
   })
 });
 
+app.use('/graphql', graphqlHTTP({
+  schema,
+  graphiql: true
+}))
 const PORT = process.env.PORT || 5000
 
 app.listen(PORT), () => {

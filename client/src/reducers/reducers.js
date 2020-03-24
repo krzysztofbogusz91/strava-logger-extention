@@ -5,6 +5,7 @@ export const initialState = {
   token: '',
   refresh_token: '',
 };
+
 const AppStore = (state = initialState, action) => {
   switch (action.type) {
     case SAVE_TOKEN:
