@@ -20,6 +20,14 @@ const LoginData = new GraphQLObjectType({
   })
 })
 
+const AuthModel = new GraphQLObjectType({
+  name: 'AuthModel',
+  fields: () => ({
+    token: { type: GraphQLString },
+    refresh_token: { type: GraphQLString }
+  })
+})
+
 const AthleteData = new GraphQLObjectType({
   name: 'BasicAthleteData',
   fields: () => ({
@@ -52,22 +60,15 @@ const RootQuery = new GraphQLObjectType({
         }
       },
       resolve(parent, args) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${args.token}` 
         return axios.get('https://www.strava.com/api/v3/athlete')
           .then(res => res.data);
       }
     },
     activities: {
       type: new GraphQLList(ActivityData),
-      args: {
-        token: {
-          type: GraphQLString
-        }
-      },
       resolve(parent, args) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${args.token}` 
         return axios.get('https://www.strava.com/api/v3/activities')
-          .then(res => res.data);
+          .then(res => res.data)
       },
     },
     auth: {
@@ -96,12 +97,37 @@ const RootQuery = new GraphQLObjectType({
               user: {...res.data.athlete }
             };
           })
-          .catch(err => console.log('Error', err.status))
+      },
+    },
+    authRefresh: {
+      type: AuthModel,
+      args: {
+        refresh_token: {type: GraphQLString},
+      },
+      resolve(parent, args) {
+        const secret = keys.sec;
+        const params = { client_id: '43111', client_secret: secret, refresh_token: args.refresh_token, grant_type: 'refresh_token'}
+        const url = new URL("https://www.strava.com/oauth/token" );
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        return axios.post('' + url, {
+          mode: 'no-cors',
+          headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        }
+      },
+        )
+          .then(res => {
+            return {
+              token: res.data.access_token,
+              refresh_token: res.data.refresh_token,
+            };
+          })
       },
     }
-  }),
+  })
 })
 
 module.exports = new GraphQLSchema({
-  query: RootQuery,
+  query: RootQuery
 })
