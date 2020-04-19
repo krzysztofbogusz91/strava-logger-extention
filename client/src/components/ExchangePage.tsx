@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from 'react-redux';
 import { saveToken } from '../actions';
 import { setAuthInLS } from '../helpers/local-storage.helper';
@@ -21,7 +21,7 @@ const AUTH = gql`
       user {
         firstname,
         lastname,
-        profile,,
+        profile,
       }
     }
   }
@@ -34,6 +34,12 @@ export const ExchangePage = ( props: any) => {
   const { loading, error, data } = useQuery(AUTH, {
     variables: { code }
   });
+  
+  useEffect(() => {
+    if(!!data) {
+      gotData(data.auth)
+    }
+  }, [data])
 
   const gotData = (authData: AuthData) => {
       if(!authData) {
@@ -58,7 +64,6 @@ export const ExchangePage = ( props: any) => {
       <div className="ExchangePage">
         {!!error ? 'Error' : null}
         {!!loading ? 'Loading...' : null}
-        {!!data ? gotData(data.auth) : null}
       </div>
     )
 }

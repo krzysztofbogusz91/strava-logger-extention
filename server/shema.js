@@ -66,8 +66,8 @@ const RootQuery = new GraphQLObjectType({
     },
     activities: {
       type: new GraphQLList(ActivityData),
-      resolve(parent, args) {
-        return axios.get('https://www.strava.com/api/v3/activities')
+      resolve(parent, args, req) {
+        return axios.get('https://www.strava.com/api/v3/activities',  { 'headers': { 'Authorization': req.token }})
           .then(res => res.data)
       },
     },
@@ -82,7 +82,7 @@ const RootQuery = new GraphQLObjectType({
         const params = { client_id: '43111', client_secret: secret, code, grant_type: 'authorization_code'}
         const url = new URL("https://www.strava.com/oauth/token" );
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-        return axios.post('' + url, {
+        return axios.post( url.toString() , {
           mode: 'no-cors',
           headers: {
           'Access-Control-Allow-Origin': '*',
@@ -109,7 +109,7 @@ const RootQuery = new GraphQLObjectType({
         const params = { client_id: '43111', client_secret: secret, refresh_token: args.refresh_token, grant_type: 'refresh_token'}
         const url = new URL("https://www.strava.com/oauth/token" );
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-        return axios.post('' + url, {
+        return axios.post( url.toString(), {
           mode: 'no-cors',
           headers: {
           'Access-Control-Allow-Origin': '*',
