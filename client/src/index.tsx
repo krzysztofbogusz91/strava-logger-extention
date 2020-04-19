@@ -18,7 +18,6 @@ const client = new ApolloClient({
 });
 
 const store = createStore(AppStore, applyMiddleware(thunk));
-console.log(store.getState());
 
 ReactDOM.render( 
   <ApolloProvider client={client}>

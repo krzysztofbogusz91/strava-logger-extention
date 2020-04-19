@@ -3,6 +3,12 @@ import { connect } from 'react-redux';
 import { saveToken } from '../actions';
 import { setAuthInLS } from '../helpers/local-storage.helper';
 
+interface AuthResponse {
+  access_token: string;
+  refresh_token: string;
+  user: any;
+}
+ 
 export const ExchangePage = ( props: any) => {
 
   useEffect(() => {
@@ -14,9 +20,8 @@ export const ExchangePage = ( props: any) => {
       method: 'GET', 
       mode: 'cors',
     }).then(resp => resp.json())
-      .then ((resps: any) => {
-      const access_token = resps.access_token;
-      const refresh_token = resps.refresh_token;
+      .then ((resps: AuthResponse) => {
+      const { access_token, refresh_token} = resps;
       const athlete = resps.user;
       if(!!access_token && !!athlete){
         props.saveToken(access_token, refresh_token, athlete);

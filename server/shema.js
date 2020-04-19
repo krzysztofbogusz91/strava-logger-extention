@@ -43,12 +43,18 @@ const RootQuery = new GraphQLObjectType({
       args: {
         token: {
           type: GraphQLString
+        },
+        page: {
+          type: GraphQLString
         }
       },
       resolve(parent, args) {
+        console.log('args', args);
         axios.defaults.headers.common['Authorization'] = `Bearer ${args.token}` 
-        return axios.get('https://www.strava.com/api/v3/activities')
-          .then(res => res.data);
+        return axios.get(`https://www.strava.com/api/v3/activities?page=${args.page}`)
+          .then(res => {
+            console.log(res.data.length)
+            return res.data});
       }
     }
   }),
