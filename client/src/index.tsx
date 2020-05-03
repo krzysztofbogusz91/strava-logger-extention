@@ -4,21 +4,22 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 
-import * as serviceWorker from './serviceWorker';
-
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import AppStore from './reducers/reducers';
-import ApolloClient from 'apollo-boost';
+
+import ApolloClient from 'apollo-client';
+import { NormalizedCacheObject } from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 
-const client = new ApolloClient({
-  uri: 'http://localhost:5000/graphql',
-});
+import * as serviceWorker from './serviceWorker';
+import { cli } from './apollo/apollo.server';
+
 
 const store = createStore(AppStore, applyMiddleware(thunk));
-console.log(store.getState());
+
+const client: ApolloClient<NormalizedCacheObject> = cli;
 
 ReactDOM.render( 
   <ApolloProvider client={client}>

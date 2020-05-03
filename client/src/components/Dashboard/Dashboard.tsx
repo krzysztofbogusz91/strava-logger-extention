@@ -20,8 +20,8 @@ interface Activity {
 }
 
 const ACTIVITIES = gql`
-  query Activities($token: String) {
-    activities (token: $token){
+  query Activities {
+    activities {
       name,
       start_date,
       location_country,
@@ -37,9 +37,7 @@ function Dashboard(props: any) {
   const authUser = !props.athlete ? athlete : props.athlete;
   const token = !props.token ? access_token : props.token;
   
-  const { loading, error, data } = useQuery(ACTIVITIES, {
-    variables: { token }
-  });
+  const { loading, error, data } = useQuery(ACTIVITIES);
   
 
   useEffect(() => {
@@ -68,6 +66,7 @@ function Dashboard(props: any) {
       </div>
       <div className="dashboard-content">
         <ul className="dashboard-content-list">
+          {!!error ? 'err' : null}
         {!!data && data.activities.length > 0 ? displayActivities(data.activities) : 'Loading activities...'}
         </ul>
       </div>
