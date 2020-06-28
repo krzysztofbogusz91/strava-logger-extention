@@ -66,10 +66,22 @@ const RootQuery = new GraphQLObjectType({
     },
     activities: {
       type: new GraphQLList(ActivityData),
-      resolve(parent, args, req) {
-        return axios.get('https://www.strava.com/api/v3/activities',  { 'headers': { 'Authorization': req.token }})
-          .then(res => res.data)
+      args: {
+        token: {
+          type: GraphQLString
+        },
+        page: {
+          type: GraphQLString
+        }
       },
+      resolve(parent, args) {
+        console.log('args', args);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${args.token}` 
+        return axios.get(`https://www.strava.com/api/v3/activities?page=${args.page}`)
+          .then(res => {
+            console.log(res.data.length)
+            return res.data});
+      }
     },
     auth: {
       type: LoginData,
