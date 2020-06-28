@@ -27,6 +27,12 @@ const AUTH = gql`
   }
 `;
 
+interface AuthResponse {
+  access_token: string;
+  refresh_token: string;
+  user: any;
+}
+ 
 export const ExchangePage = ( props: any) => {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code');
