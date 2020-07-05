@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cd server && node server.js",
     "server": "cd server && nodemon server.js",
-    "dev": "cd client && npm run start"
+    "dev": "cd client && npm run start",
+    "cypress": "./node_modules/.bin/cypress open"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "apollo-server-express": "^2.11.0",
     "axios": "^0.19.2",
     "cors": "^2.8.5",
+    "cypress": "^4.9.0",
     "express": "^4.17.1",
     "graphql": "^14.6.0"
   }
