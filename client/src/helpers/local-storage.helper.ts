@@ -14,3 +14,7 @@ export const setAuthInLS = (auth: AuthStravaModel) => {
   localStorage.removeItem('auth');
   localStorage.setItem('auth', JSON.stringify(auth));
 }
+
+export const clearAuthInLS = () => {
+  localStorage.removeItem('auth');
+}
