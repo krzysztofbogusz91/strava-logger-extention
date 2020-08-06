@@ -6,7 +6,7 @@ import { getAuthFromLS } from '../../helpers/local-storage.helper';
 import Feed from './Feed/Feed';
 import './Dashboard.scss';
 import { Grid } from '@material-ui/core';
-
+import NavBar from '../Navbar/NavBar';
 
 export interface User {
   firstname: string;
@@ -38,50 +38,58 @@ function Dashboard(props: any) {
   const { athlete, access_token} = getAuthFromLS()
   const authUser = !props.athlete ? athlete : props.athlete;
   const token = !props.token ? access_token : props.token;
+
+  if(!props.athlete || !props.token ) {
+    return (<div> Something went wrong </div>)
+  }
   
   return (
-    <Grid 
+    <div>
+      <NavBar></NavBar>
+      <Grid 
       container
       direction="row"
       justify="flex-start"
       alignItems="flex-start"
       >
-      <Grid item xs={3} className="dashboard-side-bar">
-        <div className="dashboard-side-bar-image"><img className="image_profile" src={authUser.profile} alt="profile_pic"/></div>
-        <div className="dashboard-side-bar-description">{ authUser.firstname } {authUser.lastname}</div>
-      </Grid>
-      <Grid item xs={9}>
-        <Query query={ ACTIVITIES } variables={{ token,  page: `${1}` }}>
-          { (result: QueryResult<any, Record<string, any>>)=> {
-            const { data, fetchMore, error } = result;
+        <Grid item xs={3} className="dashboard-side-bar">
+          <div className="dashboard-side-bar-image"><img className="image_profile" src={authUser.profile} alt="profile_pic"/></div>
+          <div className="dashboard-side-bar-description">{ authUser.firstname } {authUser.lastname}</div>
+        </Grid>
+        <Grid item xs={9}>
+          <Query query={ ACTIVITIES } variables={{ token,  page: `${1}` }}>
+            { (result: QueryResult<any, Record<string, any>>)=> {
+              const { data, fetchMore, error } = result;
 
-            if (error) return (<div>{`Error! ${error.message}`}</div>);
-            
-            if (!data) return null;
-            
-            return (
-              <Feed 
-              activities={ data.activities }
-              onLoadMore={(e: number) =>
-                fetchMore({
-                  variables: {
-                    page: `${e}`,
-                    token: `${token}`
-                  },
-                  updateQuery: (prev, { fetchMoreResult }) => {
-                    if (!fetchMoreResult) return prev;
-                    return Object.assign({}, prev, {
-                      activities: [...prev.activities, ...fetchMoreResult.activities]
-                    });
-                  }
-                })
-              }
-              ></Feed>
-            );
-          }}
-        </Query>        
-      </Grid>
-    </Grid>
+              if (error) return (<div>{`Error! ${error.message}`}</div>);
+              
+              if (!data) return null;
+              
+              return (
+                <Feed 
+                activities={ data.activities }
+                onLoadMore={(e: number) =>
+                  fetchMore({
+                    variables: {
+                      page: `${e}`,
+                      token: `${token}`
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      if (!fetchMoreResult) return prev;
+                      return Object.assign({}, prev, {
+                        activities: [...prev.activities, ...fetchMoreResult.activities]
+                      });
+                    }
+                  })
+                }
+                ></Feed>
+              );
+            }}
+          </Query>        
+            </Grid>
+          </Grid> 
+    </div>
+    
   );
 }
 

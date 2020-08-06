@@ -1,4 +1,4 @@
-import { SAVE_TOKEN } from '../actions/types';
+import { SAVE_TOKEN, LOG_OUT } from '../actions/types';
 
 export const initialState = {
   athlete: '',
@@ -14,6 +14,13 @@ const AppStore = (state = initialState, action) => {
         token: action.token,
         refresh_token: action.refresh_token,
         athlete: action.athlete
+      });
+    case LOG_OUT:
+      return ({
+        ...state,
+        token: null,
+        refresh_token: null,
+        athlete: null
       });
     default:
       return state;
