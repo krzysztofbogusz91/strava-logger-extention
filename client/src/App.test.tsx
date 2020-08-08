@@ -1,9 +1,25 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, queryAllByText, cleanup } from '@testing-library/react';
 import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
+afterEach(cleanup)
+
+test('renders application main page', () => {
+  const { getByText } = render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>);
+  const linkElement = getByText(/Rehab Buddy/i);
   expect(linkElement).toBeInTheDocument();
+});
+
+test('shows login screen', () => {
+  const { getByText, container } = render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>);
+  const stravaLogin = getByText(/Login with Strava/i);
+  
+  expect(stravaLogin).toBeInTheDocument();
 });

@@ -39,9 +39,6 @@ function Dashboard(props: any) {
   const authUser = !props.athlete ? athlete : props.athlete;
   const token = !props.token ? access_token : props.token;
 
-  if(!props.athlete || !props.token ) {
-    return (<div> Something went wrong </div>)
-  }
   
   return (
     <div>
