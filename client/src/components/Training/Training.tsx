@@ -2,11 +2,11 @@ import React from "react";
 import './Training.scss';
 import NavBar from '../Navbar/NavBar';
 
-const Training = (props: any) => {
+export const Training = (props: any) => {
   return (
      <div>
       <NavBar></NavBar>
-      <div>
+      <div className="container-box">
         Training works
       </div>
     </div>

@@ -2,11 +2,11 @@ import React from "react";
 import './About.scss';
 import NavBar from '../Navbar/NavBar';
 
-const About = (props: any) => {
+export const About = (props: any) => {
   return (
      <div>
       <NavBar></NavBar>
-      <div>
+      <div className="container-box">
         About works
       </div>
     </div>

@@ -19,7 +19,7 @@ import { cli } from './apollo/apollo.server';
 
 
 // Styles
-import './index.css';
+import './index.scss';
 import 'fontsource-roboto';
 
 const store = createStore(AppStore, applyMiddleware(thunk));

@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
       marginBottom: '20px',
-      backgroundColor: '#FFEFE8',
+      // backgroundColor: '#FFEFE8',
       boxShadow: 'none'
     },
     menuButton: {
@@ -33,14 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export function NavBar(props: any) {
   const { logOut } = props;
   const classes = useStyles();
-
-  const theme = createMuiTheme({
-    palette: {
-      primary: {
-        main: '#FFEFE8'
-      }
-    },
-  });
 
   const logout = () => {
     props.history.push('/login')
@@ -61,7 +53,6 @@ export function NavBar(props: any) {
 
   return (
     <div className={classes.root}>
-      <ThemeProvider theme={theme}>
         <AppBar elevation={0} color="primary" position="static">
           <Toolbar>
             <IconButton onClick={handleClick} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
@@ -93,7 +84,6 @@ export function NavBar(props: any) {
             <Button onClick={logout} color="inherit">Logout</Button>
           </Toolbar>
         </AppBar>
-      </ThemeProvider>
     </div>
   );
 }

@@ -34,11 +34,21 @@ const ACTIVITIES = gql`
   }
 `;
 
-function Dashboard(props: any) {
+export function Dashboard(props: any) {
   const { athlete, access_token} = getAuthFromLS()
   const authUser = !props.athlete ? athlete : props.athlete;
   const token = !props.token ? access_token : props.token;
 
+  if(!authUser?.profile || !authUser?.firstname) {
+    return (
+      <div>
+        <NavBar></NavBar>
+        <div className="container-box">
+          Error no user
+        </div>
+      </div>
+    )
+  }
   
   return (
     <div>
