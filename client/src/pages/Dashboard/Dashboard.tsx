@@ -1,6 +1,5 @@
 import React from "react";
 import { Query, QueryResult } from "react-apollo";
-import { connect } from 'react-redux';
 import { gql } from 'apollo-boost';
 import { getAuthFromLS } from '../../helpers/local-storage.helper';
 import Feed from './Feed/Feed';
@@ -28,17 +27,11 @@ const ACTIVITIES = gql`
   }
 `;
 
-interface DashboardProps {
-  athlete: User | null;
-  token: string;
-}
-
-export function Dashboard(props: DashboardProps) {
+export function Dashboard() {
+  // todo move to apollo link
   const { athlete, access_token} = getAuthFromLS()
-  const authUser = !props.athlete ? athlete : props.athlete;
-  const token = !props.token ? access_token : props.token;
 
-  if(!authUser?.profile || !authUser?.firstname) {
+  if(!athlete?.profile || !athlete?.firstname) {
     return (
       <div>
         <div className="container-box">
@@ -57,11 +50,11 @@ export function Dashboard(props: DashboardProps) {
       alignItems="flex-start"
       >
         <Grid item xs={3} className="dashboard-side-bar">
-          <div className="dashboard-side-bar-image"><img className="image_profile" src={authUser.profile} alt="profile_pic"/></div>
-          <div className="dashboard-side-bar-description">{ authUser.firstname } {authUser.lastname}</div>
+          <div className="dashboard-side-bar-image"><img className="image_profile" src={athlete.profile} alt="profile_pic"/></div>
+          <div className="dashboard-side-bar-description">{ athlete.firstname } {athlete.lastname}</div>
         </Grid>
         <Grid item xs={9}>
-          <Query query={ ACTIVITIES } variables={{ token,  page: `${1}` }}>
+          <Query query={ ACTIVITIES } variables={{ token: access_token,  page: `${1}` }}>
             { (result: QueryResult<any, Record<string, any>>)=> {
               const { data, fetchMore, error } = result;
 
@@ -76,7 +69,7 @@ export function Dashboard(props: DashboardProps) {
                   fetchMore({
                     variables: {
                       page: `${e}`,
-                      token: `${token}`
+                      token: `${access_token}`
                     },
                     updateQuery: (prev, { fetchMoreResult }) => {
                       if (!fetchMoreResult) return prev;
@@ -97,15 +90,5 @@ export function Dashboard(props: DashboardProps) {
   );
 }
 
-interface DashboardStore {
-  token: string;
-  athlete: User | null;
-}
-
-function mapStateToProps(state: DashboardStore) {
-  const { token , athlete } = state
-  return { token, athlete }
-}
-
-export default connect(mapStateToProps)(Dashboard)
+export default Dashboard;
 

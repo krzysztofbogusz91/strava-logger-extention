@@ -5,9 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { connect } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { logOut } from '../../actions';
 import { withRouter, Link } from 'react-router-dom';
 import { clearAuthInLS } from '../../helpers/local-storage.helper';
 import Menu from '@material-ui/core/Menu';
@@ -36,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function NavBar(props: any) {
-  const { logOut, location } = props;
+  const { location } = props;
   const classes = useStyles();
 
   const menuOptions: MenuOption[] = [
@@ -61,7 +59,6 @@ export function NavBar(props: any) {
   const logout = () => {
     props.history.push('/login')
     clearAuthInLS();
-    logOut();
   }
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -83,7 +80,7 @@ export function NavBar(props: any) {
     return menuOptions.map(option => {
       return (
         <MenuItem key={option.path} >
-          <Link to={{ pathname: option.path }}> { option.name } </Link>
+          <Link onClick={handleClose} to={{ pathname: option.path }}> { option.name } </Link>
         </MenuItem>
       )
     })
@@ -101,7 +98,6 @@ export function NavBar(props: any) {
                 anchorEl={anchorEl}
                 keepMounted
                 open={open}
-                onClose={handleClose}
               >
                 { renderMenuOptions() }
               </Menu>
@@ -115,8 +111,4 @@ export function NavBar(props: any) {
   );
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
-  logOut: () => dispatch(logOut()),
-});
-
-export default connect(null, mapDispatchToProps)(withRouter(NavBar));
+export default (withRouter(NavBar));

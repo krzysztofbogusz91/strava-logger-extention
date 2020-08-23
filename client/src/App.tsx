@@ -11,9 +11,6 @@ import { Exchange } from './pages/Exchange/Exchange';
 
 const LoginContainer = () => (
   <div>
-      <Route exact path="/">
-        <Redirect to="/login" />
-      </Route>
       <Route path="/login" component={LogInPage} exact />
   </div>
 )
@@ -25,7 +22,6 @@ const DefaultContainer = () => (
       <Route path="/settings" component={Settings} />
       <Route path="/about" component={About} />
       <Route path="/training" component={Training} />
-      <Route path="/exchange_token" component={Exchange} />
     </div>
  )
 
@@ -33,7 +29,11 @@ function App() {
   return (
     <div className="App">
       <Switch>
+        <Route exact path="/">
+          <Redirect to="/login" />
+        </Route>
         <Route exact path="/(login)" component={LoginContainer}/>
+        <Route path="/exchange_token" component={Exchange} />
         <Route component={DefaultContainer}/>
       </Switch>
     </div>

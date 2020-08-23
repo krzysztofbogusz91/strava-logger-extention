@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
-import { connect } from 'react-redux';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { setAuthInLS } from '../../helpers/local-storage.helper';
-import { saveToken } from '../../actions';
 
 interface AuthData {
   token: string;
@@ -28,12 +26,6 @@ const AUTH = gql`
   }
 `;
 
-interface AuthResponse {
-  access_token: string;
-  refresh_token: string;
-  user: any;
-}
- 
 export const Exchange = ( props: any) => {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code');
@@ -50,20 +42,17 @@ export const Exchange = ( props: any) => {
 
   const gotData = (authData: AuthData) => {
       if(!authData) {
-        setTimeout(()=>{
-          props.history.push('/login')
-        }, 1)
-        return null;
+        props.history.push('/login')
+        return;
       }
       const access_token = authData.token;
       const refresh_token = authData.refresh_token;
       const athlete = authData.user;
+      
       if(!!access_token && !!athlete){
-        props.saveToken(access_token, refresh_token, athlete);
+        // TODO set all to apollo
         setAuthInLS({access_token, refresh_token, athlete});
-        setTimeout(()=>{
-          props.history.push('/dashboard')
-        }, 1)
+        props.history.push('/dashboard')
       }
     }
 
@@ -75,8 +64,4 @@ export const Exchange = ( props: any) => {
     )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
-  saveToken: (token:any, refresh:any, user:any) => dispatch(saveToken(token, refresh, user)),
-});
-
-export default connect(null, mapDispatchToProps)(Exchange);
+export default Exchange;
