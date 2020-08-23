@@ -2,7 +2,7 @@ import React from "react";
 import InfiniteScroll from 'react-infinite-scroller';
 import { Activity } from '../Dashboard';
 import ActivityComponent from '../ActivityComponent/ActivityComponent';
-import '../../Dashboard/Dashboard.scss';
+import '../Dashboard.scss';
 import { ApolloQueryResult } from 'apollo-boost';
 
 

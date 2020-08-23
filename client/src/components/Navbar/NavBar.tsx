@@ -5,18 +5,22 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { connect } from 'react-redux';
-import { createStyles, makeStyles, Theme, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { logOut } from '../../actions';
-import { withRouter } from 'react-router-dom';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { withRouter, Link } from 'react-router-dom';
 import { clearAuthInLS } from '../../helpers/local-storage.helper';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
+interface MenuOption {
+  path: string;
+  name: string;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
       marginBottom: '20px',
-      backgroundColor: '#FFEFE8',
       boxShadow: 'none'
     },
     menuButton: {
@@ -24,49 +28,87 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+      textTransform: 'capitalize'
     },
   }),
 );
 
 export function NavBar(props: any) {
-  const { logOut } = props;
+  const { location } = props;
   const classes = useStyles();
 
-  const theme = createMuiTheme({
-    palette: {
-      primary: {
-        main: '#FFEFE8'
-      }
+  const menuOptions: MenuOption[] = [
+    {
+      path: '/about',
+      name: 'About'
     },
-  });
+    {
+      path: '/training',
+      name: 'Training'
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard'
+    },
+    {
+      path: '/settings',
+      name: 'Settings'
+    }
+  ]
 
   const logout = () => {
     props.history.push('/login')
     clearAuthInLS();
-    logOut();
+  }
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = !!anchorEl;
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const renderTitle = (): string => {
+      return !!location && !!location.pathname ? location.pathname.substring(1) : ''
+  }
+
+  const renderMenuOptions = (): JSX.Element[] => {
+    return menuOptions.map(option => {
+      return (
+        <MenuItem key={option.path} >
+          <Link onClick={handleClose} to={{ pathname: option.path }}> { option.name } </Link>
+        </MenuItem>
+      )
+    })
   }
 
   return (
     <div className={classes.root}>
-      <ThemeProvider theme={theme}>
-        <AppBar elevation={0} color="primary" position="static">
+        <AppBar elevation={0} color="default" position="static">
           <Toolbar>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <IconButton onClick={handleClick} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={open}
+              >
+                { renderMenuOptions() }
+              </Menu>
             <Typography variant="h6" className={classes.title}>
-              Rehab Buddy
+              { renderTitle() }
             </Typography>
             <Button onClick={logout} color="inherit">Logout</Button>
           </Toolbar>
         </AppBar>
-      </ThemeProvider>
     </div>
   );
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
-  logOut: () => dispatch(logOut()),
-});
-
-export default connect(null, mapDispatchToProps)(withRouter(NavBar));
+export default (withRouter(NavBar));

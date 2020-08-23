@@ -1,3 +1,13 @@
 body {
   font-family: Roboto, sans-serif;
+  color: rgba(black, 0.87);
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+.App {
+  width: 90%;
+  margin: auto;
 }

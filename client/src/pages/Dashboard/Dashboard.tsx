@@ -1,18 +1,11 @@
 import React from "react";
 import { Query, QueryResult } from "react-apollo";
-import { connect } from 'react-redux';
 import { gql } from 'apollo-boost';
 import { getAuthFromLS } from '../../helpers/local-storage.helper';
 import Feed from './Feed/Feed';
 import './Dashboard.scss';
 import { Grid } from '@material-ui/core';
-import NavBar from '../Navbar/NavBar';
-
-export interface User {
-  firstname: string;
-  lastname: string;
-  profile: string;
-}
+import { User } from '../../interfaces/user.model';
 
 export interface Activity {
   name: string;
@@ -34,18 +27,21 @@ const ACTIVITIES = gql`
   }
 `;
 
-function Dashboard(props: any) {
+export function Dashboard() {
   const { athlete, access_token} = getAuthFromLS()
-  const authUser = !props.athlete ? athlete : props.athlete;
-  const token = !props.token ? access_token : props.token;
 
-  if(!props.athlete || !props.token ) {
-    return (<div> Something went wrong </div>)
+  if(!athlete?.profile || !athlete?.firstname) {
+    return (
+      <div>
+        <div className="container-box">
+          Error no user
+        </div>
+      </div>
+    )
   }
   
   return (
     <div>
-      <NavBar></NavBar>
       <Grid 
       container
       direction="row"
@@ -53,11 +49,11 @@ function Dashboard(props: any) {
       alignItems="flex-start"
       >
         <Grid item xs={3} className="dashboard-side-bar">
-          <div className="dashboard-side-bar-image"><img className="image_profile" src={authUser.profile} alt="profile_pic"/></div>
-          <div className="dashboard-side-bar-description">{ authUser.firstname } {authUser.lastname}</div>
+          <div className="dashboard-side-bar-image"><img className="image_profile" src={athlete.profile} alt="profile_pic"/></div>
+          <div className="dashboard-side-bar-description">{ athlete.firstname } {athlete.lastname}</div>
         </Grid>
         <Grid item xs={9}>
-          <Query query={ ACTIVITIES } variables={{ token,  page: `${1}` }}>
+          <Query query={ ACTIVITIES } variables={{ token: access_token,  page: `${1}` }}>
             { (result: QueryResult<any, Record<string, any>>)=> {
               const { data, fetchMore, error } = result;
 
@@ -72,7 +68,7 @@ function Dashboard(props: any) {
                   fetchMore({
                     variables: {
                       page: `${e}`,
-                      token: `${token}`
+                      token: `${access_token}`
                     },
                     updateQuery: (prev, { fetchMoreResult }) => {
                       if (!fetchMoreResult) return prev;
@@ -93,10 +89,5 @@ function Dashboard(props: any) {
   );
 }
 
-function mapStateToProps(state: any) {
-  const { token , athlete } = state
-  return { token, athlete }
-}
-
-export default connect(mapStateToProps)(Dashboard)
+export default Dashboard;
 
