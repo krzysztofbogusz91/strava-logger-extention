@@ -65,7 +65,7 @@ export function NavBar(props: any) {
   }
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const open = !!anchorEl;
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -79,7 +79,7 @@ export function NavBar(props: any) {
       return !!location && !!location.pathname ? location.pathname.substring(1) : ''
   }
 
-  const renderMenuOptions = () => {
+  const renderMenuOptions = (): JSX.Element[] => {
     return menuOptions.map(option => {
       return (
         <MenuItem key={option.path} >
@@ -100,7 +100,7 @@ export function NavBar(props: any) {
                 id="simple-menu"
                 anchorEl={anchorEl}
                 keepMounted
-                open={Boolean(anchorEl)}
+                open={open}
                 onClose={handleClose}
               >
                 { renderMenuOptions() }
