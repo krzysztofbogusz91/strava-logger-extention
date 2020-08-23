@@ -9,7 +9,6 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import AppStore from './reducers/reducers';
 
 // Apollo
 import ApolloClient from 'apollo-client';
@@ -21,6 +20,7 @@ import { cli } from './apollo/apollo.server';
 // Styles
 import './index.scss';
 import 'fontsource-roboto';
+import AppStore from './reducers/reducers';
 
 const store = createStore(AppStore, applyMiddleware(thunk));
 

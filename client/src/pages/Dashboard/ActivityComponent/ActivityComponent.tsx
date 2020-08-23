@@ -1,5 +1,5 @@
 import React from "react";
-import '../../Dashboard/Dashboard.scss';
+import '../Dashboard.scss';
 import { Activity } from '../Dashboard';
 
 interface ActivityComponentProps {

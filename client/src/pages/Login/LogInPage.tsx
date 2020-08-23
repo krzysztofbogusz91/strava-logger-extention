@@ -10,17 +10,14 @@ function LogInPage( props: any) {
     window.location.href = "http://www.strava.com/oauth/authorize?client_id=43111&response_type=code&redirect_uri=http://localhost:3000/exchange_token&approval_prompt=force&scope=read,activity:read,activity:write"
   }
   const logIn = () => {
-    props.history.push('/train')
+    props.history.push('/training')
   }
 
   return (
     <div className="LogInPage">
-      <header>
-          Rehab Buddy
-      </header>
       <div className="button-container">
         <div className="button-container-element">
-          <Button size='large' fullWidth onClick={logInToStrava} variant="contained" color="primary">
+          <Button size='large' fullWidth onClick={logInToStrava} variant="outlined">
             Login with Strava
           </Button>
         </div>
@@ -44,7 +41,7 @@ function LogInPage( props: any) {
           </form>
         </div>
         <div className="button-container-element">
-          <Button size='large' fullWidth onClick={logIn} variant="contained" color="primary">
+          <Button size='large' fullWidth onClick={logIn} variant="outlined">
             Login
           </Button>
         </div>

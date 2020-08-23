@@ -1,13 +1,21 @@
 import { SAVE_TOKEN, LOG_OUT } from '../actions/types';
+import { User } from '../interfaces/user.model';
 
-export const initialState = {
-  athlete: '',
+export interface StoreInterface {
+  athlete: User | null;
+  token: string;
+  refresh_token: string;
+}
+
+export const initialState: StoreInterface = {
+  athlete: null,
   token: '',
   refresh_token: '',
 };
 
-const AppStore = (state = initialState, action) => {
+const AppStore = (state: StoreInterface = initialState, action: any) => {
   switch (action.type) {
+
     case SAVE_TOKEN:
       return ({
         ...state,
@@ -15,6 +23,7 @@ const AppStore = (state = initialState, action) => {
         refresh_token: action.refresh_token,
         athlete: action.athlete
       });
+
     case LOG_OUT:
       return ({
         ...state,

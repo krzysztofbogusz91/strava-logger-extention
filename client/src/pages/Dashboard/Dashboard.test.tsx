@@ -6,16 +6,17 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 const mockStore = configureMockStore();
-const store = mockStore({});
+const store = mockStore({token: '', athlete: null});
 
 describe('About page', () => {
   let container: any = null;
+  const props = {token: '', athlete: null};
 
   beforeEach(() => {
      container = render(
       <BrowserRouter> 
         <Provider store={store}>
-          <Dashboard />
+          <Dashboard token={props.token} athlete={props.athlete}/>
         </Provider>
       </BrowserRouter>
     );
@@ -23,13 +24,6 @@ describe('About page', () => {
 
   afterEach(cleanup)
   
-  it('should show basic title', () => {
-    const { getByText } = container;
-    const title = getByText(/Rehab Buddy/i);
-    
-    expect(title).toBeInTheDocument();
-  });
-
   it('should show error when no authenticated user', () => {
     const { getByText } = container;
 

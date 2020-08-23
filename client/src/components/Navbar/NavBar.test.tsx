@@ -6,7 +6,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { NavBar } from './NavBar';
 
 const mockStore = configureMockStore();
-const store = mockStore({});
+const store = mockStore({location: {
+  pathname: '/about'
+}});
 
 describe('NavBar page', () => {
   afterEach(cleanup)
@@ -19,7 +21,7 @@ describe('NavBar page', () => {
         </Provider>
       </BrowserRouter>
     );
-    const title = getByText(/Rehab Buddy/i);
+    const title = getByText(/about/i);
     
     expect(title).toBeInTheDocument();
   });

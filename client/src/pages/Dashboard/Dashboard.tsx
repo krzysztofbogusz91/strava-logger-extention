@@ -6,13 +6,7 @@ import { getAuthFromLS } from '../../helpers/local-storage.helper';
 import Feed from './Feed/Feed';
 import './Dashboard.scss';
 import { Grid } from '@material-ui/core';
-import NavBar from '../Navbar/NavBar';
-
-export interface User {
-  firstname: string;
-  lastname: string;
-  profile: string;
-}
+import { User } from '../../interfaces/user.model';
 
 export interface Activity {
   name: string;
@@ -34,7 +28,12 @@ const ACTIVITIES = gql`
   }
 `;
 
-export function Dashboard(props: any) {
+interface DashboardProps {
+  athlete: User | null;
+  token: string;
+}
+
+export function Dashboard(props: DashboardProps) {
   const { athlete, access_token} = getAuthFromLS()
   const authUser = !props.athlete ? athlete : props.athlete;
   const token = !props.token ? access_token : props.token;
@@ -42,7 +41,6 @@ export function Dashboard(props: any) {
   if(!authUser?.profile || !authUser?.firstname) {
     return (
       <div>
-        <NavBar></NavBar>
         <div className="container-box">
           Error no user
         </div>
@@ -52,7 +50,6 @@ export function Dashboard(props: any) {
   
   return (
     <div>
-      <NavBar></NavBar>
       <Grid 
       container
       direction="row"
@@ -100,7 +97,12 @@ export function Dashboard(props: any) {
   );
 }
 
-function mapStateToProps(state: any) {
+interface DashboardStore {
+  token: string;
+  athlete: User | null;
+}
+
+function mapStateToProps(state: DashboardStore) {
   const { token , athlete } = state
   return { token, athlete }
 }

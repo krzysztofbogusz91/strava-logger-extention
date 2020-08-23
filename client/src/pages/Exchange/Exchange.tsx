@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { connect } from 'react-redux';
-import { saveToken } from '../actions';
-import { setAuthInLS } from '../helpers/local-storage.helper';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import { setAuthInLS } from '../../helpers/local-storage.helper';
+import { saveToken } from '../../actions';
+
 interface AuthData {
   token: string;
   refresh_token: string;
@@ -33,7 +34,7 @@ interface AuthResponse {
   user: any;
 }
  
-export const ExchangePage = ( props: any) => {
+export const Exchange = ( props: any) => {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code');
 
@@ -78,4 +79,4 @@ const mapDispatchToProps = (dispatch: any) => ({
   saveToken: (token:any, refresh:any, user:any) => dispatch(saveToken(token, refresh, user)),
 });
 
-export default connect(null, mapDispatchToProps)(ExchangePage);
+export default connect(null, mapDispatchToProps)(Exchange);

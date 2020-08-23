@@ -6,19 +6,23 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from 'react-redux';
-import { createStyles, makeStyles, Theme, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { logOut } from '../../actions';
 import { withRouter, Link } from 'react-router-dom';
 import { clearAuthInLS } from '../../helpers/local-storage.helper';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+interface MenuOption {
+  path: string;
+  name: string;
+}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
       marginBottom: '20px',
-      // backgroundColor: '#FFEFE8',
       boxShadow: 'none'
     },
     menuButton: {
@@ -26,13 +30,33 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+      textTransform: 'capitalize'
     },
   }),
 );
 
 export function NavBar(props: any) {
-  const { logOut } = props;
+  const { logOut, location } = props;
   const classes = useStyles();
+
+  const menuOptions: MenuOption[] = [
+    {
+      path: '/about',
+      name: 'About'
+    },
+    {
+      path: '/training',
+      name: 'Training'
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard'
+    },
+    {
+      path: '/settings',
+      name: 'Settings'
+    }
+  ]
 
   const logout = () => {
     props.history.push('/login')
@@ -51,9 +75,23 @@ export function NavBar(props: any) {
     setAnchorEl(null);
   };
 
+  const renderTitle = (): string => {
+      return !!location && !!location.pathname ? location.pathname.substring(1) : ''
+  }
+
+  const renderMenuOptions = () => {
+    return menuOptions.map(option => {
+      return (
+        <MenuItem key={option.path} >
+          <Link to={{ pathname: option.path }}> { option.name } </Link>
+        </MenuItem>
+      )
+    })
+  }
+
   return (
     <div className={classes.root}>
-        <AppBar elevation={0} color="primary" position="static">
+        <AppBar elevation={0} color="default" position="static">
           <Toolbar>
             <IconButton onClick={handleClick} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
@@ -65,21 +103,10 @@ export function NavBar(props: any) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem>
-                  <Link to={{ pathname: "/about" }}> About </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link to={{ pathname: "/train" }}> Train </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link to={{ pathname: "/settings" }}> Settings </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link to={{ pathname: "/dashboard" }}> Dashboard </Link>
-                </MenuItem>
+                { renderMenuOptions() }
               </Menu>
             <Typography variant="h6" className={classes.title}>
-              Rehab Buddy
+              { renderTitle() }
             </Typography>
             <Button onClick={logout} color="inherit">Logout</Button>
           </Toolbar>
