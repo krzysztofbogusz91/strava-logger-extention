@@ -50,7 +50,6 @@ export const Exchange = ( props: any) => {
       const athlete = authData.user;
       
       if(!!access_token && !!athlete){
-        // TODO set all to apollo
         setAuthInLS({access_token, refresh_token, athlete});
         props.history.push('/dashboard')
       }

@@ -6,7 +6,6 @@ import { gql, Observable, GraphQLRequest, NormalizedCacheObject, Operation, Apol
 import { getAuthFromLS, setAuthInLS } from '../helpers/local-storage.helper';
 
 export const apolloMiddleware = setContext((operation: GraphQLRequest) => {
-  // todo move token to apollo
   const { access_token } = getAuthFromLS();
   return {
     headers: {

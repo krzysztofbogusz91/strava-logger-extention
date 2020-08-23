@@ -28,7 +28,6 @@ const ACTIVITIES = gql`
 `;
 
 export function Dashboard() {
-  // todo move to apollo link
   const { athlete, access_token} = getAuthFromLS()
 
   if(!athlete?.profile || !athlete?.firstname) {
