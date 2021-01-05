@@ -20,7 +20,7 @@
   "homepage": "https://github.com/krzysztofbogusz91/strava-logger-extention#readme",
   "dependencies": {
     "apollo-server-express": "^2.11.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^14.6.0"
